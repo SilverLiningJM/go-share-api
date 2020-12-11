@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
-    id INTEGER,
+    id SERIAL,
     fname VARCHAR(50) NOT NULL,
     lname VARCHAR(50) NOT NULL,
     email VARCHAR(128) UNIQUE NOT NULL,
@@ -8,13 +8,13 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS organisations (
-    id INTEGER,
+    id SERIAL,
     name VARCHAR(128) NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS centres (
-    id INTEGER,
+    id SERIAL,
     organisation_id INTEGER NOT NULL,
     address_1 VARCHAR(128) NOT NULL,
     address_2 VARCHAR(128),
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS centre_contact (
 );
 
 CREATE TABLE IF NOT EXISTS donations (
-    id INTEGER,
+    id SERIAL,
     user_id INTEGER NOT NULL,
     donated_on TIMESTAMP NOT NULL,
     PRIMARY KEY (id),
@@ -45,13 +45,14 @@ CREATE TABLE IF NOT EXISTS item_type (
 );
 
 CREATE TABLE IF NOT EXISTS items (
-    id INTEGER,
+    id SERIAL,
     donation_id INTEGER NOT NULL,
     description VARCHAR(255),
     item_type VARCHAR(20) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (donation_id) REFERENCES donations(id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (item_type) REFERENCES item_type(value) ON UPDATE CASCADE ON DELETE RESTRICT
+);
 
 CREATE TABLE IF NOT EXISTS user_roles (
     value VARCHAR(20),
@@ -64,7 +65,7 @@ CREATE TABLE IF NOT EXISTS roles (
     user_id INTEGER,
     role VARCHAR(20) NOT NULL,
     PRIMARY KEY (centre_id, user_id),
-    FOREIGN KEY (centre_id) REFERENCES centres(id) ON DELETE CASCADE ON UPDATE RESTRICT
+    FOREIGN KEY (centre_id) REFERENCES centres(id) ON DELETE CASCADE ON UPDATE RESTRICT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE RESTRICT,
     FOREIGN KEY (role) REFERENCES user_roles(value) ON DELETE RESTRICT ON UPDATE CASCADE
 );
@@ -74,8 +75,8 @@ CREATE TABLE IF NOT EXISTS keeps (
     item_id INTEGER,
     quantity DECIMAL NOT NULL,
     PRIMARY KEY (centre_id, item_id),
-    FOREIGN KEY (centre_id) REFERENCES centres(id) ON DELETE CASCADE
-    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE,
+    FOREIGN KEY (centre_id) REFERENCES centres(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS accepts (
@@ -83,6 +84,6 @@ CREATE TABLE IF NOT EXISTS accepts (
     item_type VARCHAR(20),
     currently_wants BOOLEAN NOT NULL,
     PRIMARY KEY (centre_id, item_type),
-    FOREIGN KEY(centre_id) REFERENCES centres(id) ON DELETE CASCADE
-    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE,
+    FOREIGN KEY(centre_id) REFERENCES centres(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_type) REFERENCES item_type(value) ON DELETE CASCADE
 );
