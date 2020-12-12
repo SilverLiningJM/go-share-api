@@ -1,0 +1,12 @@
+language: java
+jdk:
+  - openjdk15
+
+before_install:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker pull openjdk:15.0.1-jdk-slim
+
+script:
+  - ./mvnw clean install
+  - docker build -t $DOCKER_USERNAME/$DOCKER_REPO_NAME .
+  - docker push $DOCKER_USERNAME/$DOCKER_REPO_NAME
