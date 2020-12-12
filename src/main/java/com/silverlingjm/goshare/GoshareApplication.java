@@ -1,4 +1,4 @@
-package com.silverlingjm.goshare.goshare;
+package com.silverlingjm.goshare;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
